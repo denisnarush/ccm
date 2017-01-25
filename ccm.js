@@ -21,7 +21,21 @@ function isFileExist(filePath) {
 }
 
 module.exports = function (content, filePath) {
-  var pageJSON = JSON.parse(content);
+  try {
+    var pageJSON = JSON.parse(content);
+  } catch (error) {
+    try {
+      var pageJSON = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    } catch (error) {
+      console.log('not valid json file');
+      return false;
+    }
+  }
+
+  if (Object.keys(pageJSON).length < 1) {
+    return false;
+  }
+
   var index = filePath;
 
   var blocks = {};
@@ -62,20 +76,6 @@ module.exports = function (content, filePath) {
           return;
       }
 
-      if (isFileExist('./' + blocks[index].css)) {
-          less += '@import "./' + blocks[index].css + '";\n';
-          console.log(FgGreen, './' + blocks[index].css);
-      } else {
-          console.log(FgRed, './' + blocks[index].css);
-      }
-
-      if (isFileExist('./' + blocks[index].js)) {
-          js += '<script src="../' + blocks[index].js + '"></script>';
-          console.log(FgGreen, './' + blocks[index].js);
-      } else {
-          console.log(FgRed, './' + blocks[index].js);
-      }
-
       if (isFileExist('./blocks/' + blocks[index].css)) {
           less += '@import "./blocks/' + blocks[index].css + '";\n';
           console.log(FgGreen, './blocks/' + blocks[index].css);
@@ -96,6 +96,7 @@ module.exports = function (content, filePath) {
       } else {
           LOG(FgRed, './blocks.theme/' + blocks[index].css);
       }
+
   });
 
   if (less) {
