@@ -38,44 +38,42 @@ module.exports = function (content, filePath) {
 
   var index = filePath;
 
-  var blocks = {};
+  var blocks = {
+    "page": {
+      "css": "page/page.less",
+      "js": "page/page.js"
+    }
+  };
 
-  html = '<!doctype html>\n';
-  html += '<html lang="en">\n';
-  html += '    <head>\n';
-  html += '        <title>' + pageJSON.title + '</title>\n';
+  html = '<!doctype html>';
+  html += '<html lang="en">';
+  html += '<head>';
+  html += '<title>' + pageJSON.title + '</title>';
 
   pageJSON.head.forEach(function (index) {
     switch (index.elem) {
     case 'css':
-        html += "<link href='" + index.url + "' rel='stylesheet' type='text/css'>\n";
+        html += "<link href='" + index.url + "' rel='stylesheet' type='text/css'>";
         break;
     case 'js':
-        html += "<script src='" + index.url + "' type='text/javascript'></script>\n";
+        html += "<script src='" + index.url + "' type='text/javascript'></script>";
         break;
     default:
         break;
     }
   });
 
-  html += '    </head>\n';
-  html += '    <body>\n';
+  html += '</head>';
+  html += '<body>';
   
   readContent(pageJSON.content, undefined, blocks);
   var less = '';
   var js = '';
 
-  blocks.page = {
-      'css': index.replace('.json', '')+'.css',
-      'js': index.replace('.json', '')+'.js'
-  };
+  console.log(blocks);
 
   // check files
   Object.keys(blocks).forEach(function (index) {
-      if (index == 'page') {
-          return;
-      }
-
       if (isFileExist('./blocks/' + blocks[index].css)) {
           less += '@import "./blocks/' + blocks[index].css + '";\n';
           console.log(FgGreen, './blocks/' + blocks[index].css);
@@ -107,7 +105,7 @@ module.exports = function (content, filePath) {
       html += js;
   }
 
-  html += '    </body>\n';
+  html += '</body>';
   html += '</html>';
   fs.writeFileSync(index.substring(0, index.length - 4) + 'html', html, 'utf-8');
 
