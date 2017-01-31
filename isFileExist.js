@@ -6,4 +6,4 @@ module.exports = function isFileExist(filePath) {
     } catch (error) {
         return false;
     }
-}
+};

@@ -10,4 +10,4 @@ module.exports = function checkTagParam(tag) {
     if (typeof tag === 'string' && !!tag) {
         return tag;
     }
-}
+};

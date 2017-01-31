@@ -7,4 +7,4 @@ module.exports = function isPairOfTag(tag) {
     } else {
         return true;
     }
-}
+};
