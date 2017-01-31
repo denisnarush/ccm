@@ -1,5 +1,6 @@
 var checkTagParam = require("./checkTagParam");
 var isPairOfTag = require("./isPairOfTag");
+var fs = require('fs');
 
 module.exports = function readContent(content, block, blocks) {
   if (!content) {
@@ -9,6 +10,25 @@ module.exports = function readContent(content, block, blocks) {
   html += '\n';
 
   content.forEach(function (index) {
+    var indexJSON;
+    var attrs = index.attrs || {};
+
+    try {
+      indexJSON = JSON.parse(fs.readFileSync('./blocks/' + index.block + '/' + index.block + '.json', "utf8"));
+    } catch (error) {}
+
+    if (indexJSON) {
+      attrs = Object.assign({}, indexJSON.attrs, index.attrs || {});
+      mods = Object.assign({}, indexJSON.mods, index.mods || {});
+      index = Object.assign({}, indexJSON, index);
+
+      index.attrs = attrs;
+      index.mods = mods;
+
+      console.log(index);
+    }
+
+
     var tag = checkTagParam(index.tag);
 
     if (tag) {
