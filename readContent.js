@@ -1,42 +1,7 @@
+var checkTagParam = require("./checkTagParam");
+var isPairOfTag = require("./isPairOfTag");
+
 module.exports = function readContent (content, block, blocks) {
-
-function checkTagParam(tag) {
-    if (tag === undefined) {
-        return 'div';
-    }
-
-    if (tag === false) {
-        return false;
-    }
-
-    if (typeof tag === 'string' && !!tag) {
-        return tag;
-    }
-}
-
-
-
-
-
-
-
-function isPairOfTag(tag) {
-    if (tag === 'img' ||
-            tag === 'input' ||
-            tag === 'hr' ||
-            tag === 'br') {
-        return false;
-    } else {
-        return true;
-    }
-}
-
-
-
-
-
-
-
     if (!content) {
         return;
     }
@@ -49,7 +14,7 @@ function isPairOfTag(tag) {
         if (tag) {
 
 
-            // feeel block paths
+            // feeel blocks object
             if (index.block) {
                 blocks[index.block] = blocks[index.block] || {
                     css: index.block + '/' + index.block + '.less',
@@ -58,6 +23,13 @@ function isPairOfTag(tag) {
             }
 
             if (block && index.elem) {
+                blocks[block + '__' + index.elem] = blocks[block + '__' + index.elem] || {
+                    css: block + '/' + '__' + index.elem + '/' + block + '__' + index.elem + '.less',
+                    js: block + '/' + '__' + index.elem + '/' + block + '__' + index.elem + '.js'
+                };
+            }
+
+            if (index.parent && index.elem) {
                 blocks[block + '__' + index.elem] = blocks[block + '__' + index.elem] || {
                     css: block + '/' + '__' + index.elem + '/' + block + '__' + index.elem + '.less',
                     js: block + '/' + '__' + index.elem + '/' + block + '__' + index.elem + '.js'
@@ -75,7 +47,7 @@ function isPairOfTag(tag) {
             // -feeel block paths
 
             // class
-            html += '<' + tag + ' class="' + (index.block || (block ? block + '__' + index.elem : false));
+            html += '<' + tag + ' class="' + ((index.block ? index.block + (index.attrs && index.attrs.class ? " " + index.attrs.class : "") : "") || (block ? block + '__' + index.elem : index.attrs ? index.attrs.class : false));
 
             // mods
             if (index.mods !== undefined) {

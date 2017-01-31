@@ -1,24 +1,20 @@
-var fs = require('fs');
-var readContent = require('./readContent');
-
-const FgRed = "\x1b[31m ";
-const FgGreen = "\x1b[32m ";
-
-function LOG() {
-//        console.log.apply(this, arguments);
-}
+var fs = require('fs'),
+    readContent = require('./readContent');
 
 function isFileExist(filePath) {
-
-
     try {
         fs.lstatSync(filePath).isFile();
         return true;
     } catch (error) {
         return false;
     }
-
 }
+
+const FgRed = "\x1b[31m ";
+const FgGreen = "\x1b[32m ";
+
+
+
 
 module.exports = function (content, filePath) {
   try {
@@ -49,6 +45,7 @@ module.exports = function (content, filePath) {
   html += '<html lang="en">';
   html += '<head>';
   html += '<title>' + pageJSON.title + '</title>';
+  html += '<meta charset="utf-8">';
 
   pageJSON.head.forEach(function (index) {
     switch (index.elem) {
@@ -70,8 +67,6 @@ module.exports = function (content, filePath) {
   var less = '';
   var js = '';
 
-  console.log(blocks);
-
   // check files
   Object.keys(blocks).forEach(function (index) {
       if (isFileExist('./blocks/' + blocks[index].css)) {
@@ -90,9 +85,9 @@ module.exports = function (content, filePath) {
 
       if (isFileExist('./blocks.theme/' + blocks[index].css)) {
           less += '@import "./blocks.theme/' + blocks[index].css + '";\n';
-          LOG(FgGreen, './blocks.theme/' + blocks[index].css);
+          console.log(FgGreen, './blocks.theme/' + blocks[index].css);
       } else {
-          LOG(FgRed, './blocks.theme/' + blocks[index].css);
+//          console.log(FgRed, './blocks.theme/' + blocks[index].css);
       }
 
   });
@@ -109,5 +104,6 @@ module.exports = function (content, filePath) {
   html += '</html>';
   fs.writeFileSync(index.substring(0, index.length - 4) + 'html', html, 'utf-8');
 
+  // set console color to white
   console.log('\x1b[0m');
 }
