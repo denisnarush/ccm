@@ -40,6 +40,7 @@ module.exports = function (content, filePath) {
   html += '<head>';
   html += '<title>' + pageJSON.title + '</title>';
   html += '<meta charset="utf-8">';
+  html += '<meta name="viewport" content="width=device-width">';
   pageJSON.head.forEach(function (index) {
     switch (index.elem) {
     case 'css':

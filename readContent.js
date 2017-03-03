@@ -13,8 +13,14 @@ module.exports = function readContent(content, block, blocks) {
     var indexJSON;
     var attrs = index.attrs || {};
 
+    // block
     try {
       indexJSON = JSON.parse(fs.readFileSync('./blocks/' + index.block + '/' + index.block + '.json', "utf8"));
+    } catch (error) {}
+    
+    // elem
+    try {
+      indexJSON = JSON.parse(fs.readFileSync('./blocks/' + block + '/__' + index.elem + '/' + block + '__' + index.elem + '.json', "utf8"));
     } catch (error) {}
 
     if (indexJSON) {
@@ -25,7 +31,22 @@ module.exports = function readContent(content, block, blocks) {
       index.attrs = attrs;
       index.mods = mods;
 
-      console.log(index);
+      indexJSON = undefined;
+    }
+    
+    try {
+      indexJSON = JSON.parse(fs.readFileSync('./blocks/' + block + '/__' + index.elem + '/' + block + '__' + index.elem +  '.json', "utf8"));
+    } catch (error) {}
+
+    if (indexJSON) {
+      attrs = Object.assign({}, indexJSON.attrs, index.attrs || {});
+      mods = Object.assign({}, indexJSON.mods, index.mods || {});
+      index = Object.assign({}, indexJSON, index);
+
+      index.attrs = attrs;
+      index.mods = mods;
+
+      indexJSON = undefined;
     }
 
 
